@@ -4,6 +4,7 @@ Data Visualization Term Project - All charts are created using Qlikview/Qliksens
 Data Sources:
 
 per-capita-co2-domestic-aviation.csv - Graver, Zhang & Rutherford (2019). International Council of Clean Transportation (ICCT). 
+
 temperature-anomaly.csv - Met Office Hadley Centre (2024) –  Met Office Hadley Centre, “HadCRUT5 HadCRUT.5.0.2.0”
 
 Global-GHG-Emissions-by-sector-based-on-WRI-2020.csv - Hannah Ritchie (2020) - Hannah Ritchie (2020) - “Sector by sector: where do global greenhouse gas emissions come from?” Published online at OurWorldInData.org. Retrieved from: 'https://ourworldindata.org/ghg-emissions-by-sector' 
