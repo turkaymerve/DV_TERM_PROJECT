@@ -1,0 +1,65 @@
+SET ThousandSep=',';
+SET DecimalSep='.';
+SET MoneyThousandSep=',';
+SET MoneyDecimalSep='.';
+SET MoneyFormat='$ ###0.00;-$ ###0.00';
+SET TimeFormat='h:mm:ss TT';
+SET DateFormat='M/D/YYYY';
+SET TimestampFormat='M/D/YYYY h:mm:ss[.fff] TT';
+SET FirstWeekDay=6;
+SET BrokenWeeks=1;
+SET ReferenceDay=0;
+SET FirstMonthOfYear=1;
+SET CollationLocale='en-US';
+SET CreateSearchIndexOnReload=1;
+SET MonthNames='Jan;Feb;Mar;Apr;May;Jun;Jul;Aug;Sep;Oct;Nov;Dec';
+SET LongMonthNames='January;February;March;April;May;June;July;August;September;October;November;December';
+SET DayNames='Mon;Tue;Wed;Thu;Fri;Sat;Sun';
+SET LongDayNames='Monday;Tuesday;Wednesday;Thursday;Friday;Saturday;Sunday';
+SET NumericalAbbreviation='3:k;6:M;9:G;12:T;15:P;18:E;21:Z;24:Y;-3:m;-6:μ;-9:n;-12:p;-15:f;-18:a;-21:z;-24:y';
+
+em_cap:
+LOAD
+    Entity,
+    Code,
+    "Year",
+     floor(Year,10) as Decade,
+    "Annual CO₂ emissions (per capita)"
+FROM [lib://DataFiles/co-emissions-per-capita.csv]
+(txt, utf8, embedded labels, delimiter is ',', msq);
+
+temp_change:
+LOAD
+    Entity,
+    Code,
+    "Year",
+     floor(Year,10) as Decade,
+    "Global average temperature anomaly relative to 1961-1990",
+    "Upper bound of the annual temperature anomaly (95% confidence interval)",
+    "Lower bound of the annual temperature anomaly (95% confidence interval)"
+FROM [lib://DataFiles/temperature-anomaly.csv]
+(txt, codepage is 28591, embedded labels, delimiter is ',', msq);
+
+
+
+
+em_sector:
+LOAD
+    if(isnull("Sub-sector"), 'Non-Energy', "Sub-sector") AS "Sub-sector 2",
+    "Share of global greenhouse gas emissions (%)",
+    C AS "Sub-Sector",
+    D AS Sector
+FROM [lib://DataFiles/Global-GHG-Emissions-by-sector-based-on-WRI-2020_new.xlsx]
+(ooxml, embedded labels, table is [Sub-sector (further breakdown)]);
+
+
+
+em_source:
+LOAD
+    Sources& ' ('&"Global Electricity"*100& '% of Global Electricity)' AS Source,
+ 
+    "Tonnes/GwH",
+    "Global Electricity"*100 AS "Global Electricity"
+FROM [lib://DataFiles/Emissions by source.xlsx]
+(ooxml, embedded labels, table is Sheet1);
+
